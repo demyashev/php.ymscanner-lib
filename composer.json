@@ -1,0 +1,35 @@
+{
+  "name": "demyashev/ymscanner",
+  "description": "PHP lib for ymscanner.ru",
+  "keywords": ["review", "three", "3d", "model","api", "php", "lib"],
+  "version": "1.0.0",
+  "time": "2021-02-12 14:00:00",
+  "type": "library",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Alexander Demyashev",
+      "email": "alexander.demyashev@gmail.com",
+      "homepage": "https://demyashev.com",
+      "role": "developer"
+    }
+  ],
+  "support": {
+    "email": "support@ymscanner.ru"
+  },
+  "require": {
+    "php": ">=7.0",
+    "guzzlehttp/guzzle": "^7.0"
+  },
+  "suggest": {
+    "php" : "PHP 7 strict mode"
+  },
+  "config": {
+    "vendor-dir": "src/vendor"
+  },
+  "autoload": {
+    "psr-4": {
+      "YMScanner\\": "src"
+    }
+  }
+}
