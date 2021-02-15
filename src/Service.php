@@ -75,17 +75,34 @@ class Service {
      * @link https://ymscanner.ru/doc/photos
      *
      * @param int $id
+     * @param string $size !!! Experimental. Yandex images sizes: original|50x50|75x75|100x100|120x120|150x150|200x200|240x240|250x250|500x500|1000x1000
      *
      * @return array
      *
      * @throws \Exception
      */
-    public function getPhotos(int $id) : array
+    public function getPhotos(int $id, string $size = '') : array
     {
         $response = $this->request('post', 'photos', ['id' => $id]);
 
-        /** @todo via Model */
-        return $response->pictures;
+        $pictures = $response->pictures ?? [];
+
+        if ($size) {
+            $picturesSized = [];
+
+            foreach ($pictures as $pictureNumber => $pictureCollection) {
+                foreach ($pictureCollection as $pictureItem) {
+                    if ($pictureItem->size === $size) {
+                        /** @var array $pictureItem [string url, ...] */
+                        $picturesSized[$pictureNumber][] = $pictureItem;
+                    }
+                }
+            }
+
+            $pictures = $picturesSized;
+        }
+
+        return $pictures;
     }
 
     /**
