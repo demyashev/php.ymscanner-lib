@@ -14,7 +14,7 @@ Add these lines to the file `composer.json`
         }
     ],
     "require": {
-        "demyashev/php.ymscanner-lib": "@dev"
+        "demyashev/ymscanner": "@dev"
     }
 }
 ```
