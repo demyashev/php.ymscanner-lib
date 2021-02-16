@@ -19,7 +19,8 @@
   },
   "require": {
     "php": ">=7.0",
-    "guzzlehttp/guzzle": "^7.0"
+    "ext-curl": "*",
+    "ext-json": "*"
   },
   "suggest": {
     "php" : "PHP 7 strict mode"

@@ -18,13 +18,6 @@ class Service {
 
     private $key;
 
-    private $client;
-
-    public function __construct()
-    {
-        $this->client = new Client(['base_uri' => 'https://ymscanner.ru/api/']);
-    }
-
     public function setKey(string $key) : Service
     {
         $this->key = $key;
@@ -364,24 +357,40 @@ class Service {
     {
         $method = strtoupper($method);
 
-        if (!in_array($method, ['POST', 'GET'])) {
-            throw new \Exception('Wrong request method');
-        }
-
         $data = array_merge($data, ['key' => $this->getKey()]);
+        $url = 'https://ymscanner.ru/api/' . $action;
 
-        $response = $this->client->request($method, $action, [
-            'connect_timeout' => 5,
-            'form_params' => $data
-        ]);
+        $ch = curl_init();
 
-        if (200 !== $response->getStatusCode()) {
-            throw new \Exception("HTTP {$response->getStatusCode()} Error: {$response->getReasonPhrase()}");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        switch ($method) {
+            case 'POST':
+                curl_setopt($ch, CURLOPT_POST, true);
+
+                if ($data) {
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                }
+                break;
+
+            case 'GET':
+                $url .= '?' . http_build_query($data);
+                break;
+
+            default:
+                throw new \Exception('Wrong request method');
         }
 
-        $json = (string) $response->getBody();
+        curl_setopt($ch, CURLOPT_URL,  $url);
 
-        $object = json_decode($json);
+        $response = curl_exec($ch);
+        $info = curl_getinfo($ch);
+
+        if (200 !== $info['http_code']) {
+            throw new \Exception("HTTP {$info['http_code']} Error");
+        }
+
+        $object = json_decode($response);
 
         if (is_null($object)) {
             throw new \Exception('Bad json response');
